@@ -37,8 +37,13 @@ const createOneTask = (req, res) => {
 
 const updateTask = (req, res) => {
     const id = req.params.id;
+
     const { taskTitle, taskDescription } = req.body;
     const tasks = datas.find(task => task.id == id);
+
+    if (!tasks) {
+        return res.status(404).json({ error: "No task found with that ID" });
+    }
     tasks.taskTitle = taskTitle;
     tasks.taskDescription = taskDescription;
     res.json(tasks);
@@ -46,6 +51,12 @@ const updateTask = (req, res) => {
 
 const deleteTask = (req, res) => {
     const id = req.params.id;
+
+    const taskIndex = datas.findIndex(task => task.id == id);
+    if(taskIndex === -1) {
+        return res.status(404).json({ error: "No task found with that ID" });
+    }
+    
     const tasks = datas.filter(task => task.id != id);
     res.json(tasks);
     
