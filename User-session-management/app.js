@@ -17,6 +17,12 @@ app.use(session({
     cookie: {}
 }));
 
+app.use((req, res, next) => {
+    res.set('Cache-Control', 'no-store')
+    next()
+  })
+  
+
 app.get("/", getHomePage);
 app.get("/login", getLoginPage);
 app.get("/register", getRegisterPage);
@@ -25,5 +31,5 @@ app.post("/register", putRegisterData);
 app.get('/logout', logout);
 
 app.listen(3000, () => {
-    console.log("server started on http://localhost:3000");
+    console.log(" server started successfully.....😃😃");
 });
