@@ -1,5 +1,6 @@
-const users = [];
+const usersData = [];
 
+//Get Home Page function
 const getHomePage = (req, res) => {
     if (req.session.user) {
         res.render('home', { user: req.session.user });
@@ -8,6 +9,7 @@ const getHomePage = (req, res) => {
     }
 };
 
+//Get Login Page function
 const getLoginPage = (req, res) => {
     if (req.session.user) {
         res.redirect("/");
@@ -18,6 +20,7 @@ const getLoginPage = (req, res) => {
     }
 };
 
+//Get Register Page function
 const getRegisterPage = (req, res) => {
     if (req.session.user) {
         res.redirect("/");
@@ -28,9 +31,10 @@ const getRegisterPage = (req, res) => {
     }
 };
 
+//Login validation function
 const putLoginData = (req, res) => {
     const { username, password } = req.body;
-    const user = users.find(user => user.email === username);
+    const user = usersData.find(user => user.email === username);
     if (user && user.password === password) {
         req.session.user = user;
         res.redirect('/');
@@ -40,20 +44,22 @@ const putLoginData = (req, res) => {
     }
 };
 
+//User registration function
 const putRegisterData = (req, res) => {
     const { email, password, fullName, phoneNumber } = req.body;
-    const userExists = users.find(user => user.email === email);
+    const userExists = usersData.find(user => user.email === email);
     if (userExists) {
-        req.session.error = "User with that email already exists";
+        req.session.error = "User with that email already exists. Please register with nother email";
         res.redirect("/register");
     } else {
-        const newUser = { email, password, fullName, phoneNumber };
-        users.push(newUser);
-        req.session.user = newUser;
+        const newUserDetails = { email, password, fullName, phoneNumber };
+        usersData.push(newUserDetails);
+        req.session.user = newUserDetails;
         res.redirect('/');
     }
 };
 
+//Logout Function
 const logout = (req, res) => {
     req.session.destroy(err => {
         if (err) {
@@ -63,5 +69,11 @@ const logout = (req, res) => {
         res.redirect("/login");
     });
 };
+
+// //Old login function
+// const logout = (req, res) => {
+//     req.session.user = null;
+//     res.redirect('/login')
+// }
 
 module.exports = { getHomePage, getLoginPage, getRegisterPage, putLoginData, putRegisterData, logout };
